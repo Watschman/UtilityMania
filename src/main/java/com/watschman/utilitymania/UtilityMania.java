@@ -2,11 +2,14 @@ package com.watschman.utilitymania;
 
 import com.mojang.logging.LogUtils;
 import com.watschman.utilitymania.common.CommonSetupEventSubscriber;
+import com.watschman.utilitymania.common.config.UtilityManiaConfig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,6 +27,7 @@ public class UtilityMania {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
     public UtilityMania() {
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, UtilityManiaConfig.CONFIG_SPEC);
         FMLJavaModLoadingContext.get().getModEventBus().register(new CommonSetupEventSubscriber());
     }
 
