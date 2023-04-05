@@ -27,7 +27,7 @@ public class UtilityMania {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
     public UtilityMania() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, UtilityManiaConfig.CONFIG_SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, UtilityManiaConfig.init());
         FMLJavaModLoadingContext.get().getModEventBus().register(new CommonSetupEventSubscriber());
     }
 

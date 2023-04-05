@@ -1,22 +1,29 @@
 package com.watschman.utilitymania.common.config;
 
+import com.watschman.utilitymania.common.config.commands.IsGodCommandEnabledConfigEntry;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class UtilityManiaConfig {
-    private static final ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
-    public static Config CONFIG = new Config(configBuilder);
-    public static final ForgeConfigSpec CONFIG_SPEC = configBuilder.build();
+    public static List<IConfigEntry> configList = new ArrayList<>();
 
-    public static class Config {
+    public static ConfigEntries CONFIGS = new ConfigEntries();
 
-        public final ForgeConfigSpec.BooleanValue isGodModeEnabled;
+    public static ForgeConfigSpec init() {
+        ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
+        for(IConfigEntry configEntry : configList) {
+            configEntry.buildConfig(configBuilder);
+        }
+        return configBuilder.build();
+    }
 
-        public Config(ForgeConfigSpec.Builder builder) {
-            String section = "Commands";
-            builder.push(section);
-            isGodModeEnabled = builder.define("isGodModeEnabled", true);
-
+    public static class ConfigEntries {
+        public IsGodCommandEnabledConfigEntry isGodCommandEnabled;
+        public ConfigEntries() {
+            this.isGodCommandEnabled = new IsGodCommandEnabledConfigEntry();
         }
     }
 }
