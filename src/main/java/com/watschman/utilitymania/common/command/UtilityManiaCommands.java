@@ -1,14 +1,11 @@
 package com.watschman.utilitymania.common.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.watschman.utilitymania.common.command.placeholder.PlayerPlaceholder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UtilityManiaCommands {
-    public static List<ICommand> commandList = new ArrayList<>();
 
     public static CommandEntries COMMANDS = new CommandEntries();
 
@@ -16,12 +13,16 @@ public class UtilityManiaCommands {
             CommandDispatcher<CommandSourceStack> commandDispatcher,
             Commands.CommandSelection selection
     ) {
-        for (ICommand command : commandList) {
+        for (ICommand command : ICommand.COMMAND_LIST) {
             if (!command.isActive()) {
                 continue;
             }
             command.registerCommand(commandDispatcher, selection);
         }
+    }
+
+    public void initArgumentPlaceHolders() {
+        new PlayerPlaceholder();
     }
 
     public static class CommandEntries {
