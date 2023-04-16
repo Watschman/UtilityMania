@@ -2,11 +2,14 @@ package com.watschman.utilitymania;
 
 import com.mojang.logging.LogUtils;
 import com.watschman.utilitymania.common.CommonSetupEventSubscriber;
+import com.watschman.utilitymania.common.command.UtilityManiaCommandHandler;
+import com.watschman.utilitymania.common.config.UtilityManiaConfig;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.event.server.ServerStartingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -24,13 +27,9 @@ public class UtilityMania {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
     public UtilityMania() {
-        FMLJavaModLoadingContext.get().getModEventBus().register(new CommonSetupEventSubscriber());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, UtilityManiaConfig.init());
+        CommonSetupEventSubscriber setupEventSubscriber = new CommonSetupEventSubscriber();
+        FMLJavaModLoadingContext.get().getModEventBus().register(setupEventSubscriber);
+        MinecraftForge.EVENT_BUS.register(new UtilityManiaCommandHandler());
     }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        LOGGER.info("Hello World Server Starting");
-    }
-
-
 }

@@ -104,7 +104,7 @@ minecraft {
             args '--mod', 'utilitymania', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
-                examplemod {
+                utilitymania {
                     source sourceSets.main
                 }
             }
