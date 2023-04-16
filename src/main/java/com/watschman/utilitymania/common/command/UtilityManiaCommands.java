@@ -28,9 +28,11 @@ public class UtilityManiaCommands {
     public static class CommandEntries {
 
         public GodCommand godCommand;
+        public MinifyCommand minifyCommand;
 
         public CommandEntries() {
             godCommand = new GodCommand();
+            minifyCommand = new MinifyCommand();
         }
     }
 }

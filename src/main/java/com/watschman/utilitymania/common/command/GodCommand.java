@@ -2,6 +2,7 @@ package com.watschman.utilitymania.common.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.watschman.utilitymania.UtilityMania;
 import com.watschman.utilitymania.common.command.placeholder.PlayerPlaceholder;
 import com.watschman.utilitymania.common.config.UtilityManiaConfig;
 import net.minecraft.commands.CommandSourceStack;
@@ -9,6 +10,8 @@ import net.minecraft.commands.arguments.selector.EntitySelector;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,7 +19,7 @@ import java.util.List;
 
 public class GodCommand extends BaseCommand {
 
-    public static final String COMMAND_TAG = "god";
+    public static final String COMMAND_TAG = UtilityMania.MOD_ID + ".god";
     private static final String commandSolo = "god";
     private static final String commandWithPlayer = commandSolo + " #" + PlayerPlaceholder.PLACE_HOLDER_TEXT + "#";
 
@@ -51,14 +54,21 @@ public class GodCommand extends BaseCommand {
         return this.execute(commandSourceStack, new ServerPlayer[]{commandSourceStack.getPlayerOrException()});
     }
 
-    private void makePlayerGod(ServerPlayer player) {
+    public static void handlePlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (player.getTags().contains(COMMAND_TAG)) {
+            makePlayerGod(player);
+        }
+    }
+
+    private static void makePlayerGod(Player player) {
         player.getAbilities().flying = true;
         player.getAbilities().mayfly = true;
         player.getAbilities().invulnerable = true;
         player.onUpdateAbilities();
     }
 
-    private void makePlayerMortal(ServerPlayer player) {
+    private static void makePlayerMortal(Player player) {
         player.getAbilities().flying = false;
         player.getAbilities().mayfly = false;
         player.getAbilities().invulnerable = false;
@@ -77,7 +87,7 @@ public class GodCommand extends BaseCommand {
                 if (!activateGod) {
                     noGodPlayers.add(player.getDisplayName().getString());
                     player.removeTag(COMMAND_TAG);
-                    this.makePlayerMortal(player);
+                    makePlayerMortal(player);
                 } else {
                     noChangedPlayers.add(player.getDisplayName().getString());
                 }
@@ -85,7 +95,7 @@ public class GodCommand extends BaseCommand {
                 if (activateGod) {
                     player.addTag(COMMAND_TAG);
                     godPlayers.add(player.getDisplayName().getString());
-                    this.makePlayerGod(player);
+                    makePlayerGod(player);
                 } else {
                     noChangedPlayers.add(player.getDisplayName().getString());
                 }
@@ -114,12 +124,12 @@ public class GodCommand extends BaseCommand {
             if (player.getTags().contains(COMMAND_TAG)) {
                 noGodPlayers.add(player.getDisplayName().getString());
                 player.removeTag(COMMAND_TAG);
-                this.makePlayerMortal(player);
+                makePlayerMortal(player);
 
             } else {
                 player.addTag(COMMAND_TAG);
                 godPlayers.add(player.getDisplayName().getString());
-                this.makePlayerGod(player);
+                makePlayerGod(player);
             }
         }
 
